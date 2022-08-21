@@ -10,6 +10,8 @@ namespace RandoDiscordBot
 {
     public class Commands : ModuleBase<SocketCommandContext>
     {
+        private ClientManager _manager = ClientManager.GetClientManager();
+
         [Command("ping")]
         public async Task Ping()
         {
@@ -52,10 +54,16 @@ namespace RandoDiscordBot
 
             await ReplyAsync("", false, embed.Build());
         }
-        [Command("ni")]
-        public async Task ni()
+        [Command("what am i?")]
+        public async Task WhatAmI()
         {
-            await ReplyAsync("gger");
+            await ReplyAsync("A cool guy");
+        }
+        [Command("who am i?")]
+        public async Task WhoAmI()
+        {
+            var Username = base.Context.User.Username;
+            await ReplyAsync($"You are: {Username}");
         }
     }
 }

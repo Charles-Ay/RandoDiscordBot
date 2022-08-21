@@ -5,6 +5,8 @@ VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RandoDiscordBot", "RandoDiscordBot.csproj", "{2086DC65-4B43-4C13-8667-DD1201DBA72C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnimeStats", "..\AnimeStats\AnimeStats.csproj", "{A4C42BBF-45E9-46E9-95A6-988E541EB81F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{2086DC65-4B43-4C13-8667-DD1201DBA72C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2086DC65-4B43-4C13-8667-DD1201DBA72C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2086DC65-4B43-4C13-8667-DD1201DBA72C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A4C42BBF-45E9-46E9-95A6-988E541EB81F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4C42BBF-45E9-46E9-95A6-988E541EB81F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4C42BBF-45E9-46E9-95A6-988E541EB81F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4C42BBF-45E9-46E9-95A6-988E541EB81F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
