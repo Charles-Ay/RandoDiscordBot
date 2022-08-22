@@ -118,9 +118,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AnimeStats\AnimeStats.csproj">
+    <ProjectReference Include="..\AnimeStats\WebResponder.csproj">
       <Project>{a4c42bbf-45e9-46e9-95a6-988e541eb81f}</Project>
-      <Name>AnimeStats</Name>
+      <Name>WebResponder</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

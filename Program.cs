@@ -15,7 +15,7 @@ namespace RandoDiscordBot
     {
         public Program()
         {
-            
+
         }
         private ClientManager _manager;
 
@@ -27,7 +27,7 @@ namespace RandoDiscordBot
 
             string token = "MTAxMDIyNjYwMDU5MzMzODQ1MQ.G-IyRU.JYQBMc5hr7EI-saPztj29-oGemhFP-E3u3vqcY";
             _manager.client.Log += _client_Log;
-            
+
             await RegisterCommandsAsync();
 
             await _manager.client.LoginAsync(TokenType.Bot, token);
@@ -45,7 +45,7 @@ namespace RandoDiscordBot
             return Task.CompletedTask;
         }
 
-        public async Task RegisterCommandsAsync(){
+        public async Task RegisterCommandsAsync() {
             _manager.client.MessageReceived += HandleCommandAsync;
             await _manager.commands.AddModulesAsync(Assembly.GetEntryAssembly(), _manager.services);
         }
@@ -55,10 +55,13 @@ namespace RandoDiscordBot
             var message = args as SocketUserMessage;
             var context = new SocketCommandContext(_manager.client, message);
             if (message.Author.IsBot) return;
+            //else if(== )
+
 
             int argPos = 0;
             if (message.HasStringPrefix("_", ref argPos) || message.HasMentionPrefix(_manager.client.CurrentUser, ref argPos))
             {
+                if (await BeastieBlacklist(message)) return;
                 var result = await _manager.commands.ExecuteAsync(context, argPos, _manager.services);
                 if (!result.IsSuccess) Console.WriteLine(result.ErrorReason);
             }
@@ -74,42 +77,52 @@ namespace RandoDiscordBot
         private async Task HandleCommandAsyncSpec(SocketMessage args)
         {
             var message = args as SocketUserMessage;
-            string[] filters = { "what am i?", "who am i?", "download" };
+            string[] filters = { "what am i", "who am i?", "download" };
             var context = new SocketCommandContext(_manager.client, message);
-            
-            string content = message.Content;
-            
-            bool contains = filters.Any(x => content.Split(' ').Any(y => y.Contains(x.ToLower())));
-            int argPos = 1;
 
-            //foreach (var filter in filters)
-            //{
-            //    if (!contains)
-            //    {
-            //        if (message.Content.ToLower() == filter) contains = true;
-            //    }
-            //}
+            string content = message.Content;
+
+            bool contains = false;
+            //bool contains = filters.Any(x => content.Split(' ').Any(y => y.ToLower().Contains(x.ToLower())));
+            foreach (var filter in filters)
+            {
+                if (filter.ToLower().Contains(content.ToLower()) || content.ToLower().Contains(filter.ToLower()))
+                {
+                    contains = true;
+                    break;
+                }
+            }
+            
+            int argPos = 0;
 
             //message without prefix
-            //if (contains)
-            //{
-            //    var result = await _manager.commands.ExecuteAsync(context, argPos, _manager.services);
-            //    if (!result.IsSuccess) Console.WriteLine(result.ErrorReason);
-            //    return;
-            //}
-            string[] split = message.Content.Split(' ');
-            //if (message.Content.Contains("download") && split.Count() > 1)
-            //{
-
-            //}
-
-
             if (contains)
             {
-                //_manager.animeDownloader.DownloadAnime(split[1], split[2]);
-               
+                if(await BeastieBlacklist(message))return;
+                try
+                {
+                    var result = await _manager.commands.ExecuteAsync(context, argPos, _manager.services);
+                    if (!result.IsSuccess) Console.WriteLine(result.ErrorReason);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    return;
+
+                }
             }
-            _manager.animeStats.GetTopAnime();
+        }
+
+        private async Task<bool> BeastieBlacklist(SocketUserMessage message)
+        {
+            var it = _manager.client.GetUser(message.Author.Id);
+            if (it.Username.ToLower().Contains("beastie"))
+            {
+                var chnl = _manager.client.GetChannel(message.Channel.Id) as IMessageChannel; // 4
+                await chnl.SendMessageAsync($"{message.Author.Mention} shut up ur a woman"); // 5
+                return true;
+            }
+            return false;
         }
     }
 }

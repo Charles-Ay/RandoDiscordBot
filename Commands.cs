@@ -54,16 +54,73 @@ namespace RandoDiscordBot
 
             await ReplyAsync("", false, embed.Build());
         }
-        [Command("what am i?")]
+        [Command("what am i")]
         public async Task WhatAmI()
         {
             await ReplyAsync("A cool guy");
         }
-        [Command("who am i?")]
+        [Command("who am i")]
         public async Task WhoAmI()
         {
             var Username = base.Context.User.Username;
             await ReplyAsync($"You are: {Username}");
+        }
+        [Command("top anime")]
+       
+        public async Task TopAnime()
+        {
+            var animeData = await _manager.animeStats.GetTopAnime();
+            var embed = new EmbedBuilder();
+            List<Embed> em = new List<Embed>();
+            for(int i = 0; i < animeData.Count; ++i)
+            {
+                embed.WithImageUrl(animeData[i].Value);
+                embed.WithDescription(animeData[i].Key);
+                em.Add(embed.Build());
+            }
+            Embed[] embeds = em.ToArray();
+            embed = new EmbedBuilder();
+            await ReplyAsync("", false, embeds: embeds);
+
+
+            //await ReplyAsync("", false, embed.Build()); 
+        }
+        [Command("top airing")]
+        public async Task TopAiringAnime()
+        {
+            var animeData = await _manager.animeStats.GetTopAiringAnime();
+            var embed = new EmbedBuilder();
+            List<Embed> em = new List<Embed>();
+            for (int i = 0; i < animeData.Count; ++i)
+            {
+                embed.WithImageUrl(animeData[i].Value);
+                embed.WithDescription(animeData[i].Key);
+                em.Add(embed.Build());
+            }
+            Embed[] embeds = em.ToArray();
+            await ReplyAsync("", false, embeds: embeds);
+
+
+            //await ReplyAsync("", false, embed.Build()); 
+        }
+
+        [Command("stock")]
+        public async Task GetStock(string ticker = "")
+        {
+            try
+            {
+                var data = await _manager.stockManager.GetStockByTicker(ticker);
+                EmbedBuilder builder = await data.ToEmbedBuilder();
+                await ReplyAsync("", false, builder.Build());
+            }
+            catch (Exception e)
+            {
+                await ReplyAsync(e.Message);
+            }
+
+            
+
+            //await ReplyAsync("", false, embed.Build()); 
         }
     }
 }
