@@ -17,6 +17,7 @@ namespace RandoDiscordBot
         {
             await ReplyAsync("pong!");
         }
+        #region DUMB STUFF
         [Command("daddy")]
         public async Task Daddy()
         {
@@ -38,22 +39,7 @@ namespace RandoDiscordBot
         {
             await ReplyAsync("r");
         }
-
-        [Command("abort")]
-        public async Task abort()
-        {
-            await ReplyAsync("Fetus deletus");
-        }
-
-        [Command("meme")]
-        public async Task meme()
-        {
-            var embed = new EmbedBuilder();
-
-            embed.WithImageUrl("https://static.wikia.nocookie.net/runescape2/images/5/56/Frog_%28NPC%29.png/revision/latest?cb=20160531202106");
-
-            await ReplyAsync("", false, embed.Build());
-        }
+        
         [Command("what am i")]
         public async Task WhatAmI()
         {
@@ -65,6 +51,34 @@ namespace RandoDiscordBot
             var Username = base.Context.User.Username;
             await ReplyAsync($"You are: {Username}");
         }
+
+        [Command("abort")]
+        public async Task abort()
+        {
+            await ReplyAsync("Fetus deletus");
+        }
+        
+        [Command("choke")]
+        public async Task Choke()
+        {
+            var it = _manager.client.GetUser(Context.Message.Author.Id);
+            if (it.Username.ToLower().Contains("beastie"))
+            {
+                var chnl = _manager.client.GetChannel(Context.Message.Channel.Id) as IMessageChannel; // 4
+                await chnl.SendMessageAsync($"{Context.Message.Author.Mention} DIE!!! *Starts choking beastie*"); // 5
+            }
+        }
+        #endregion
+        [Command("meme")]
+        public async Task meme()
+        {
+            var embed = new EmbedBuilder();
+
+            embed.WithImageUrl(await _manager.memeManager.GetRandomMeme());
+
+            await ReplyAsync("", false, embed.Build());
+        }
+
         [Command("top anime")]
        
         public async Task TopAnime()
@@ -117,10 +131,27 @@ namespace RandoDiscordBot
             {
                 await ReplyAsync(e.Message);
             }
-
-            
-
-            //await ReplyAsync("", false, embed.Build()); 
+        }
+        
+        [Command("league")]
+        public async Task GetSummonerStats(params string[] nameArray)
+        {
+            string name = "";
+            foreach (var n in nameArray)
+            {
+                name += n + " ";
+            }
+            name.Remove(name.Length - 1);
+            try
+            {
+                var data = await _manager.riotManager.GetFormatedLeagueEntryDataBySummonerName(name);
+                EmbedBuilder builder = await data.ToEmbedBuilder();
+                await ReplyAsync("", false, builder.Build());
+            }
+            catch (Exception e)
+            {
+                await ReplyAsync(e.Message);
+            }
         }
     }
 }

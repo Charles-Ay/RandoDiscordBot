@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WebResponder;
+using WebResponder.Managers;
 
 namespace RandoDiscordBot
 {
@@ -15,8 +15,11 @@ namespace RandoDiscordBot
         public DiscordSocketClient client { get; private set; }
         public CommandService commands { get; private set; }
         public IServiceProvider services { get; private set; }
-        public AnimeStats animeStats{ get; private set; }
+        public APIKeys keys = APIKeys.GetKeysFromJson();
+        public AnimeManager animeStats{ get; private set; }
         public StockManager stockManager { get; private set; }
+        public MemeManager memeManager { get; private set; }
+        public RiotManager riotManager { get; private set; }
 
         private static ClientManager _manager;
 
@@ -24,8 +27,10 @@ namespace RandoDiscordBot
         {
             client = new DiscordSocketClient();
             commands = new CommandService();
-            animeStats = new AnimeStats();
-            stockManager = new StockManager();
+            animeStats = new AnimeManager(keys.MALKey);
+            stockManager = new StockManager(keys.StockKey);
+            memeManager = new MemeManager();
+            riotManager = new RiotManager(keys.RiotLeagueKey);
             //singletone ensure only one bot is running at a time
             services = new ServiceCollection().AddSingleton(client).AddSingleton(commands).BuildServiceProvider();
         }

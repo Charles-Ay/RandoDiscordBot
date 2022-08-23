@@ -25,7 +25,7 @@ namespace RandoDiscordBot
         {
             _manager = ClientManager.GetClientManager();
 
-            string token = "MTAxMDIyNjYwMDU5MzMzODQ1MQ.G-IyRU.JYQBMc5hr7EI-saPztj29-oGemhFP-E3u3vqcY";
+            string token = _manager.keys.DiscordKey;
             _manager.client.Log += _client_Log;
 
             await RegisterCommandsAsync();
@@ -116,6 +116,7 @@ namespace RandoDiscordBot
         private async Task<bool> BeastieBlacklist(SocketUserMessage message)
         {
             var it = _manager.client.GetUser(message.Author.Id);
+            if (message.Content.Contains("choke")) return false;
             if (it.Username.ToLower().Contains("beastie"))
             {
                 var chnl = _manager.client.GetChannel(message.Channel.Id) as IMessageChannel; // 4

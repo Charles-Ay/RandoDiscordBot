@@ -107,7 +107,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AnimeDownloader.cs" />
+    <Compile Include="APIKeys.cs" />
     <Compile Include="ClientManager.cs" />
     <Compile Include="Commands.cs" />
     <Compile Include="Program.cs" />
