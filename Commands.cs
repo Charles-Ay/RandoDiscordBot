@@ -23,22 +23,6 @@ namespace RandoDiscordBot
         {
             await ReplyAsync("I was a random bot that my handsome daddy C9Flexer decided to make when he was bored.\nMy only goal in life is to troll beastie!");
         }
-        [Command("hardR")]
-        public async Task HardR()
-        {
-            await ReplyAsync("Im about to drop the hard R!");
-        }
-        [Command("n")]
-        public async Task n()
-        {
-            await ReplyAsync("i\ng\ng");
-        }
-
-        [Command("e")]
-        public async Task e()
-        {
-            await ReplyAsync("r");
-        }
         
         [Command("what am i")]
         public async Task WhatAmI()
@@ -150,7 +134,7 @@ namespace RandoDiscordBot
             }
             catch (Exception e)
             {
-                await ReplyAsync(e.Message);
+                await ReplyAsync("No Ranked Data");
             }
         }
     }

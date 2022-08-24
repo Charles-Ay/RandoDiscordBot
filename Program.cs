@@ -107,6 +107,7 @@ namespace RandoDiscordBot
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex.Message);
+                    Console.WriteLine(message.Content);
                     return;
 
                 }
@@ -117,6 +118,7 @@ namespace RandoDiscordBot
         {
             var it = _manager.client.GetUser(message.Author.Id);
             if (message.Content.Contains("choke")) return false;
+            if (message.Content.Contains("meme")) return false;
             if (it.Username.ToLower().Contains("beastie"))
             {
                 var chnl = _manager.client.GetChannel(message.Channel.Id) as IMessageChannel; // 4
