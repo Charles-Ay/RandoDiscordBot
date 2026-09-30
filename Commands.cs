@@ -52,6 +52,16 @@ namespace RandoDiscordBot
                 await chnl.SendMessageAsync($"{Context.Message.Author.Mention} DIE!!! *Starts choking beastie*"); // 5
             }
         }
+        [Command("step on me")]
+        public async Task Choke(params string[] message)
+        {
+            var it = _manager.client.GetUser(Context.Message.Author.Id);
+            if (it.Username.ToLower().Contains("beastie"))
+            {
+                var chnl = _manager.client.GetChannel(Context.Message.Channel.Id) as IMessageChannel; // 4
+                await chnl.SendMessageAsync($"{Context.Message.Author.Mention} You've been a bad girl *crushes balls with boots*"); // 5
+            }
+        }
         #endregion
         [Command("meme")]
         public async Task meme()
@@ -125,16 +135,20 @@ namespace RandoDiscordBot
             {
                 name += n + " ";
             }
-            name.Remove(name.Length - 1);
+            name = name.Remove(name.Length - 1);
             try
             {
                 var data = await _manager.riotManager.GetFormatedLeagueEntryDataBySummonerName(name);
-                EmbedBuilder builder = await data.ToEmbedBuilder();
-                await ReplyAsync("", false, builder.Build());
+                foreach (var d in data)
+                {
+                    var builder = await d.ToEmbedBuilder();
+                    await ReplyAsync("", false, builder.Build());
+                }
             }
             catch (Exception e)
             {
                 await ReplyAsync("No Ranked Data");
+                Console.WriteLine(e.Message);
             }
         }
     }

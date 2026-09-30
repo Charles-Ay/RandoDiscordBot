@@ -65,11 +65,11 @@ namespace RandoDiscordBot
                 var result = await _manager.commands.ExecuteAsync(context, argPos, _manager.services);
                 if (!result.IsSuccess) Console.WriteLine(result.ErrorReason);
             }
-            //else if (message.HasStringPrefix("_d", ref argPos) || message.HasMentionPrefix(_manager.client.CurrentUser, ref argPos))
-            //{
-            //    var result = await _manager.commands.ExecuteAsync(context, argPos, _manager.services);
-            //    if (!result.IsSuccess) Console.WriteLine(result.ErrorReason);
-            //}
+            else if (message.HasStringPrefix("_d", ref argPos) || message.HasMentionPrefix(_manager.client.CurrentUser, ref argPos))
+            {
+                var result = await _manager.commands.ExecuteAsync(context, argPos, _manager.services);
+                if (!result.IsSuccess) Console.WriteLine(result.ErrorReason);
+            }
             else await HandleCommandAsyncSpec(args);
 
         }
@@ -92,13 +92,13 @@ namespace RandoDiscordBot
                     break;
                 }
             }
-            
+
             int argPos = 0;
 
             //message without prefix
             if (contains)
             {
-                if(await BeastieBlacklist(message))return;
+                if (await BeastieBlacklist(message)) return;
                 try
                 {
                     var result = await _manager.commands.ExecuteAsync(context, argPos, _manager.services);
@@ -118,6 +118,7 @@ namespace RandoDiscordBot
         {
             var it = _manager.client.GetUser(message.Author.Id);
             if (message.Content.Contains("choke")) return false;
+            if (message.Content.Contains("step on me")) return false;
             if (message.Content.Contains("meme")) return false;
             if (it.Username.ToLower().Contains("beastie"))
             {
