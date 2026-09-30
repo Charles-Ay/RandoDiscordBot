@@ -16,28 +16,23 @@ namespace WebResponder.Retrieval.Stock
         public string Low { get; set; }
         public string Change { get; set; }
         public string ChangePercent { get; set; }
-        public long MarketCap { get; set; }
-        public int Volume { get; set; }
-        public int VolumeAvg { get; set; }
+        public string Volume { get; set; }
         //public int Shares { get; set; }
         public string StockExchange { get; set; }
         public DateTime LastUpdated { get; set; }
         
-        public FormatedStockData(Result data)
+        public FormatedStockData(GlobalQuote data, TickerData ticker)
         {
-            Symbol = data.symbol;
-            Name = data.name;
-            Price = data.price;
-            High = data.price_high;
-            Low = data.price_low;
-            Change = data.price_change_1d;
-            ChangePercent = data.price_change_percent_1d;
-            MarketCap = data.market_cap;
-            Volume = data.volume;
-            VolumeAvg = data.volume_avg_10d;
-            //Shares = data.shares;
-            StockExchange = data.exchange_name;
-            LastUpdated = data.updated;
+            Symbol = data._01symbol;
+            Name = ticker.name;
+            Price = data._05price;
+            High = data._03high;
+            Low = data._04low;
+            Change = data._09change;
+            ChangePercent = data._10changepercent;
+            Volume = data._06volume;
+            StockExchange = ticker.exchange;
+            LastUpdated = DateTime.Now;
         }
 
         public Task<EmbedBuilder> ToEmbedBuilder()
@@ -46,7 +41,6 @@ namespace WebResponder.Retrieval.Stock
             builder.Color = Color.Green;
             builder.WithTitle(Name);
             builder.WithDescription($"Stock data for: {Symbol}");
-            builder.AddField("Market Cap", MarketCap);
             builder.AddField("Price", Price);
             builder.AddField("High", High);
             builder.AddField("Low", Low);

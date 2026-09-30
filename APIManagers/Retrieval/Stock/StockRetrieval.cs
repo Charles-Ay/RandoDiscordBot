@@ -1,11 +1,14 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using WebResponder.Retrieval.Memes;
 
 namespace WebResponder.Retrieval.Stock
 {
@@ -17,36 +20,33 @@ namespace WebResponder.Retrieval.Stock
             apiKey = key;
         }
 		public async Task<StockData> GetStockByTicker(string ticker) {
-			var client = new HttpClient();
+            var url = $"https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol={ticker}&apikey={apiKey}";
 
-			string cont1 = $"SELECT * FROM stocks WHERE symbol in ('AAPL') ORDER BY price_change_percent_1m DESC";
-			ticker = ticker.Replace(" ", "");
-			string cont2 = $"SELECT * FROM stocks WHERE symbol in ('{ticker}') ORDER BY price_change_percent_1m DESC";
-			var request = new HttpRequestMessage
-			{
-				Method = HttpMethod.Post,
-				RequestUri = new Uri("https://hotstoks-sql-finance.p.rapidapi.com/query"),
-				Headers =
-				{
-					{ "X-RapidAPI-Key", apiKey },
-					{ "X-RapidAPI-Host", "hotstoks-sql-finance.p.rapidapi.com" },
-				},
-				Content = new StringContent($"{cont2}")
-				{
-					Headers =
-					{
-						ContentType = new MediaTypeHeaderValue("text/plain")
-					}
-				}
-			};
-            
-			using (var response = await client.SendAsync(request))
-			{
-				response.EnsureSuccessStatusCode();
-				var body = await response.Content.ReadAsStringAsync();
-                return JsonConvert.DeserializeObject<StockData>(body);
-            }
+            var request = WebRequest.Create(url);
+            request.Method = "GET";
 
-		}
+            var webResponse = await request.GetResponseAsync();
+            var webStream = webResponse.GetResponseStream();
+
+            var reader = new StreamReader(webStream);
+            var data = reader.ReadToEnd();
+            return JsonConvert.DeserializeObject<StockData>(data);
+        }
+
+        public async Task<TickerData> GetTickerData(string ticker)
+        {
+            //KEY: e7d16c0603068ac794eaf1f60182a788cb510816ba8803b62ab16f37745ae211
+            var url = $"https://api.sec-api.io/mapping/ticker/^{ticker}$?token=e7d16c0603068ac794eaf1f60182a788cb510816ba8803b62ab16f37745ae211";
+
+            var request = WebRequest.Create(url);
+            request.Method = "GET";
+
+            var webResponse = await request.GetResponseAsync();
+            var webStream = webResponse.GetResponseStream();
+
+            var reader = new StreamReader(webStream);
+            var data = reader.ReadToEnd();
+            return JsonConvert.DeserializeObject<List<TickerData>>(data)[0];
+        }
     }
 }

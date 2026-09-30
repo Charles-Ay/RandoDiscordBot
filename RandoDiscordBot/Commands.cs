@@ -1,76 +1,60 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
+using Discord.Interactions;
+using RandoDiscordBot.CommandHandlers;
 
 namespace RandoDiscordBot
 {
-    public class Commands : ModuleBase<SocketCommandContext>
+    public class Commands : InteractionModuleBase<SocketInteractionContext>
     {
         private ClientManager _manager = ClientManager.GetClientManager();
 
-        [Command("ping")]
+        [SlashCommand("ping", "Ping Server")]
         public async Task Ping()
         {
-            await ReplyAsync("pong!");
-        }
-        #region DUMB STUFF
-        [Command("daddy")]
-        public async Task Daddy()
-        {
-            await ReplyAsync("I was a random bot that my handsome daddy C9Flexer decided to make when he was bored.\nMy only goal in life is to troll beastie!");
-        }
-        
-        [Command("what am i")]
-        public async Task WhatAmI()
-        {
-            await ReplyAsync("A cool guy");
-        }
-        [Command("who am i")]
-        public async Task WhoAmI()
-        {
-            var Username = base.Context.User.Username;
-            await ReplyAsync($"You are: {Username}");
+            await RespondAsync($"ping");
         }
 
-        [Command("abort")]
-        public async Task abort()
+        [SlashCommand("hello", "Hello command")]
+        public async Task Hello()
         {
-            await ReplyAsync("Fetus deletus");
+            await RespondAsync("Hello there!");
         }
-        
-        [Command("choke")]
-        public async Task Choke()
+
+        [SlashCommand("info", "Info command")]
+        public async Task Info()
         {
-            var it = _manager.client.GetUser(Context.Message.Author.Id);
-            if (it.Username.ToLower().Contains("beastie"))
-            {
-                var chnl = _manager.client.GetChannel(Context.Message.Channel.Id) as IMessageChannel; // 4
-                await chnl.SendMessageAsync($"{Context.Message.Author.Mention} DIE!!! *Starts choking beastie*"); // 5
-            }
+            await RespondAsync("This is the info command.");
         }
+        #region DUMB STUFF
+        [SlashCommand("daddy", "Find Daddy")]
+        public async Task Daddy()
+        {
+            await RespondAsync("I was a random bot that my handsome daddy Charles decided to make when he was bored.\nMy only goal in life is to troll Ellie!");
+        }
+
         #endregion
-        [Command("meme")]
+        [SlashCommand("meme", "test command")]
         public async Task meme()
         {
             var embed = new EmbedBuilder();
 
             embed.WithImageUrl(await _manager.memeManager.GetRandomMeme());
 
-            await ReplyAsync("", false, embed.Build());
+            await RespondAsync(embed: embed.Build());
         }
 
-        [Command("top anime")]
-       
+        [SlashCommand("top_anime", "Top Anime")]
+
         public async Task TopAnime()
         {
             var animeData = await _manager.animeStats.GetTopAnime();
             var embed = new EmbedBuilder();
             List<Embed> em = new List<Embed>();
-            for(int i = 0; i < animeData.Count; ++i)
+            for (int i = 0; i < animeData.Count; ++i)
             {
                 embed.WithImageUrl(animeData[i].Value);
                 embed.WithDescription(animeData[i].Key);
@@ -78,12 +62,10 @@ namespace RandoDiscordBot
             }
             Embed[] embeds = em.ToArray();
             embed = new EmbedBuilder();
-            await ReplyAsync("", false, embeds: embeds);
-
-
-            //await ReplyAsync("", false, embed.Build()); 
+            await RespondAsync(embeds: embeds);
         }
-        [Command("top airing")]
+
+        [SlashCommand("top_airing", "Top Airing Anime")]
         public async Task TopAiringAnime()
         {
             var animeData = await _manager.animeStats.GetTopAiringAnime();
@@ -96,46 +78,46 @@ namespace RandoDiscordBot
                 em.Add(embed.Build());
             }
             Embed[] embeds = em.ToArray();
-            await ReplyAsync("", false, embeds: embeds);
+            await RespondAsync(embeds: embeds);
 
 
             //await ReplyAsync("", false, embed.Build()); 
         }
 
-        [Command("stock")]
+        [SlashCommand("stock", "Stock Ticker Data")]
         public async Task GetStock(string ticker = "")
         {
             try
             {
                 var data = await _manager.stockManager.GetStockByTicker(ticker);
                 EmbedBuilder builder = await data.ToEmbedBuilder();
-                await ReplyAsync("", false, builder.Build());
+                await RespondAsync(embed: builder.Build());
             }
             catch (Exception e)
             {
-                await ReplyAsync(e.Message);
+                await RespondAsync(e.Message);
             }
         }
-        
-        [Command("league")]
-        public async Task GetSummonerStats(params string[] nameArray)
-        {
-            string name = "";
-            foreach (var n in nameArray)
-            {
-                name += n + " ";
-            }
-            name.Remove(name.Length - 1);
-            try
-            {
-                var data = await _manager.riotManager.GetFormatedLeagueEntryDataBySummonerName(name);
-                EmbedBuilder builder = await data.ToEmbedBuilder();
-                await ReplyAsync("", false, builder.Build());
-            }
-            catch (Exception e)
-            {
-                await ReplyAsync("No Ranked Data");
-            }
-        }
+        e
+        //[SlashCommand("league", "test command")]
+        //public async Task GetSummonerStats(params string[] nameArray)
+        //{
+        //    string name = "";
+        //    foreach (var n in nameArray)
+        //    {
+        //        name += n + " ";
+        //    }
+        //    name.Remove(name.Length - 1);
+        //    try
+        //    {
+        //        var data = await _manager.riotManager.GetFormatedLeagueEntryDataBySummonerName(name);
+        //        EmbedBuilder builder = await data[0].ToEmbedBuilder();
+        //        await ReplyAsync("", false, builder.Build());
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        await ReplyAsync("No Ranked Data");
+        //    }
+        //}
     }
 }

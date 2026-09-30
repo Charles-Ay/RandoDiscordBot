@@ -9,11 +9,22 @@ namespace WebResponder.Managers
 {
     public class MemeManager
     {
+        private static int currentMeme = 0;
+        private static List<string> memes = new List<string>();
         private MemeRetrieval memeRetrieval = new MemeRetrieval();
         public async Task<string> GetRandomMeme()
         {
-            MemeData meme = await memeRetrieval.GetRandomMeme();
-            return meme.url;
+            if(memes.Count == 0 || currentMeme == memes.Count)
+            {
+                MemeData meme = await memeRetrieval.GetRandomMeme();
+                foreach (Meme m in meme.memes)
+                {
+                    memes.Add(m.url);
+                }
+                currentMeme = 0;
+            }
+            else ++currentMeme;
+            return memes[currentMeme];
         }
     }
 }

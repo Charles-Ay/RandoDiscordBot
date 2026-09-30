@@ -16,8 +16,10 @@ namespace WebResponder.Managers
         }
         public async Task<FormatedStockData> GetStockByTicker(string ticker)
         {
+            TickerData tickerData = await stockRetrieval.GetTickerData(ticker.ToLower());
             StockData stock = await stockRetrieval.GetStockByTicker(ticker.ToUpper());
-            return new FormatedStockData(stock.results[0]);
+            FormatedStockData formatedStock = new FormatedStockData(stock.GlobalQuote, tickerData);
+            return formatedStock;
         }
     }
 }
